@@ -54,17 +54,20 @@ def q_table_learning(episodes,alpha,gamma,epsilon_start,epsilon_end,decay_rate,e
             next_state = extract_state(obs)
             # if (episode + 1) % 100 == 0:
             #   print("r0:",reward)
-            if (state[2] or state[3]) and state[0] != next_state[0]:
-              reward += 50
-              if state[4] and state[1] < next_state[1]:
+            if (state[2] or state[3]):
+              if state[4] and state[1] > next_state[1]:
                 reward += 50
-              if state[5] and state[1] > next_state[1]:
+              elif state[5] and state[1] < next_state[1]:
                 reward += 50
-            if (state[4] or state[5]) and state[1] != next_state[1]:
-              reward += 50
-              if state[2] and state[0] < next_state[0]:
+              elif state[1] != next_state[1]:
                 reward += 50
-              if state[3] and state[0] > next_state[0]:
+                
+            if state[4] or state[5]:
+              if state[2] and state[0] > next_state[0]:
+                reward += 50
+              elif state[3] and state[0] < next_state[0]:
+                reward += 50
+              elif state[0] != next_state[0]:
                 reward += 50
             # if (episode + 1) % 100 == 0:
             #   print("r1:",reward)
