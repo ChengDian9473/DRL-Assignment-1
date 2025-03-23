@@ -20,7 +20,8 @@ def extract_state(state):
     # relative3_col = station3_col - taxi_col
             
     # return (relative0_row,relative0_col,relative1_row,relative1_col,relative2_row,relative2_col,relative3_row,relative3_col,obstacle_north, obstacle_south, obstacle_east, obstacle_west, passenger_look, destination_look)
-    return (taxi_row, taxi_col, obstacle_north, obstacle_south, obstacle_east, obstacle_west, passenger_look, destination_look)
+    # return (taxi_row, taxi_col, obstacle_north, obstacle_south, obstacle_east, obstacle_west, passenger_look, destination_look)
+    return (taxi_row, taxi_col, obstacle_north, obstacle_south, obstacle_east, obstacle_west)
 def q_table_learning(episodes,alpha,gamma,epsilon_start,epsilon_end,decay_rate,env_config):
     env = taxi_env.SimpleTaxiEnv(**env_config)
     obs, _ = env.reset()
@@ -53,16 +54,18 @@ def q_table_learning(episodes,alpha,gamma,epsilon_start,epsilon_end,decay_rate,e
             next_state = extract_state(obs)
             # if (episode + 1) % 100 == 0:
             #   print("r0:",reward)
-            if state[6] and not next_state[6]:
-               reward -= 3
-            if state[6] and next_state[6] and state[:2] != next_state[:2]:
-               reward += 1
-            if state[7] and not next_state[7]:
-               reward -= 3
-            if state[7] and next_state[7] and state[:2] != next_state[:2]:
-               reward += 1
-            if state[:2] == next_state[:2]:
-               reward -= 50
+            if (state[2] or state[3]) and state[0] != next_state[0]:
+              reward += 50
+              if state[4] and state[1] < next_state[1]:
+                reward += 50
+              if state[5] and state[1] > next_state[1]:
+                reward += 50
+            if (state[4] or state[5]) and state[1] != next_state[1]:
+              reward += 50
+              if state[2] and state[0] < next_state[0]:
+                reward += 50
+              if state[3] and state[0] > next_state[0]:
+                reward += 50
             # if (episode + 1) % 100 == 0:
             #   print("r1:",reward)
             total_reward += reward
