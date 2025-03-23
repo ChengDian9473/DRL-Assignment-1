@@ -3,7 +3,7 @@ import numpy as np
 import pickle
 import random
 import gym
-# import train
+import train
 
 with open("./q_table.pkl", "rb") as f:
     Q_table = pickle.load(f)
