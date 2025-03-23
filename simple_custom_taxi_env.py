@@ -2,7 +2,6 @@ import gym
 import numpy as np
 import importlib.util
 import time
-from IPython.display import clear_output
 import random
 # This environment allows you to verify whether your program runs correctly during testing, 
 # as it follows the same observation format from `env.reset()` and `env.step()`. 
@@ -130,7 +129,6 @@ class SimpleTaxiEnv():
         state = (taxi_row, taxi_col, self.stations[0][0],self.stations[0][1] ,self.stations[1][0],self.stations[1][1],self.stations[2][0],self.stations[2][1],self.stations[3][0],self.stations[3][1],obstacle_north, obstacle_south, obstacle_east, obstacle_west, passenger_look, destination_look)
         return state
     def render_env(self, taxi_pos,   action=None, step=None, fuel=None):
-        clear_output(wait=True)
 
         grid = [['.'] * self.grid_size for _ in range(self.grid_size)]
         
