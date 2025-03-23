@@ -55,9 +55,9 @@ def q_table_learning(episodes,alpha,gamma,epsilon_start,epsilon_end,decay_rate,e
             # if (episode + 1) % 100 == 0:
             #   print("r0:",reward)
             if (state[2] or state[3]):
-              if state[4] and state[1] > next_state[1]:
+              if state[4] and state[1] < next_state[1]:
                 reward += 50
-              elif state[5] and state[1] < next_state[1]:
+              elif state[5] and state[1] > next_state[1]:
                 reward += 50
               elif state[1] != next_state[1]:
                 reward += 50
