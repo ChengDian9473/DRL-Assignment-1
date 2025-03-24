@@ -44,10 +44,10 @@ class SimpleTaxiEnv():
         
         test = True
         o_count = random.randint(2*grid_size,3*grid_size)
-
+        for i in range(o_count):
+            self.obstacles.add((random.randint(0,self.grid_size-1),random.randint(0,self.grid_size-1)))
         while test:
-            for i in range(o_count):
-                self.obstacles.add((random.randint(0,self.grid_size-1),random.randint(0,self.grid_size-1)))
+            self.obstacles.pop()
             counter = 0
             maze = [[0] * self.grid_size for _ in range(self.grid_size)]
             for x in range(self.grid_size):
@@ -63,7 +63,12 @@ class SimpleTaxiEnv():
                         maze[x][y] = counter
             if counter == 1:
                 test = False
-            
+            available_positions = [
+                (x, y) for x in range(self.grid_size) for y in range(self.grid_size)
+                if (x, y) not in self.stations and (x, y) not in self.obstacles
+            ]
+            if len(available_positions) < 2:
+                test = True
         
         self.destination = None
 
