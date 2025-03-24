@@ -2,6 +2,22 @@ import numpy as np
 import pickle
 import simple_custom_taxi_env as taxi_env
 
+def sqrt(x):
+    if x == 0:
+       return 0
+    if x == 1:
+       return 1
+    if x >= 2 and x <= 4:
+       return 2
+    if x >= 5:
+       return 3
+    if x == -1:
+       return -1
+    if x <= -2 and x >= -4:
+       return -2
+    if x <= -5:
+       return -3
+
 def extract_state(state):
     taxi_row, taxi_col = state[0], state[1]
     station0_row, station0_col = state[2], state[3]
@@ -70,25 +86,24 @@ def q_table_learning(episodes,alpha,gamma,epsilon_start,epsilon_end,decay_rate,e
             # Execute the selected action.
             obs, reward, done, _ = env.step(action)
             next_state = extract_state(obs)
-            # if (episode + 1) % 100 == 0:
-            #   print("r0:",reward)
-            # if state[0] == next_state[0] and state[1] == next_state[1]:
-            #   reward -= 100
-            # if not state[2] and state[0] > next_state[0]:
-            #   reward += 50
-            # if not state[3] and state[0] < next_state[0]:
-            #   reward += 50
-            # if not state[4] and state[1] < next_state[1]:
-            #   reward += 50
-            # if not state[5] and state[1] > next_state[1]:
-            #   reward += 50
             on_station = next_state[0] == 0 or next_state[1] == 0 or next_state[2] == 0 or next_state[3] == 0
-            if on_station and (not next_state[8] or not next_state[9]):
-              reward -= 2
-            if on_station and (next_state[9] and not next_state[8]):
-              reward -= 2
-            if on_station and (next_state[9] and next_state[8]):
+            next_on_station = next_state[0] == 0 or next_state[1] == 0 or next_state[2] == 0 or next_state[3] == 0
+            if state[8] == 0 or state[9] == 0 and state[:4] == next_state[:4]:
+              reward -= 4
+            if next_on_station:
               reward += 1
+            if state[8] and not next_state[8]:
+              reward -= 5
+            if next_on_station and (not state[8] and not state[9]):
+              reward -= 5
+            if next_on_station and (next_state[9] and not next_state[8]):
+              reward -= 5
+            if on_station and state[8] and not state[9]:
+              reward -= 2
+            if next_on_station and (next_state[9] and next_state[8]):
+              reward += 3
+            if on_station and next_state[9] and next_state[8] and state[:4] == next_state[:4]:
+              reward += 5
                
             total_reward += reward
             if next_state not in q_table:
