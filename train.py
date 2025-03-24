@@ -12,17 +12,32 @@ def extract_state(state):
 
     relative0_row = station0_row - taxi_row
     relative0_col = station0_col - taxi_col
+    dis0 = abs(relative0_row,relative0_col)
+    if dis0 >= 3:
+       dis0 = (dis0 + 1) // 2
     relative1_row = station1_row - taxi_row
     relative1_col = station1_col - taxi_col
+    dis1 = abs(relative1_row,relative1_col)
+    if dis1 >= 3:
+       dis1 = (dis1 + 1) // 2
     relative2_row = station2_row - taxi_row
     relative2_col = station2_col - taxi_col
+    dis2 = abs(relative2_row,relative2_col)
+    if dis2 >= 3:
+       dis2 = (dis2 + 1) // 2
     relative3_row = station3_row - taxi_row
     relative3_col = station3_col - taxi_col
+    dis3 = abs(relative3_row,relative3_col)
+    if dis3 >= 3:
+       dis3 = (dis3 + 1) // 2
             
     # v0
     # return (taxi_row, taxi_col, obstacle_north, obstacle_south, obstacle_east, obstacle_west)
     # v1
-    return (relative0_row,relative0_col,relative1_row,relative1_col,relative2_row,relative2_col,relative3_row,relative3_col,obstacle_north, obstacle_south, obstacle_east, obstacle_west, passenger_look, destination_look)
+    # return (relative0_row,relative0_col,relative1_row,relative1_col,relative2_row,relative2_col,relative3_row,relative3_col,obstacle_north, obstacle_south, obstacle_east, obstacle_west, passenger_look, destination_look)
+    # v2
+    return (dis0, dis1, dis2 ,dis3 ,obstacle_north, obstacle_south, obstacle_east, obstacle_west, passenger_look, destination_look)
+
 def q_table_learning(episodes,alpha,gamma,epsilon_start,epsilon_end,decay_rate,env_config):
     q_table = {}
     state_count = 0
@@ -67,12 +82,12 @@ def q_table_learning(episodes,alpha,gamma,epsilon_start,epsilon_end,decay_rate,e
             #   reward += 50
             # if not state[5] and state[1] > next_state[1]:
             #   reward += 50
-            on_station = (next_state[0] == 0 and next_state[1] == 0) or (next_state[2] == 0 and next_state[3] == 0) or (next_state[4] == 0 and next_state[5] == 0) or (next_state[6] == 0 and next_state[7] == 0)
-            if on_station and (not next_state[12] or not next_state[13]):
+            on_station = next_state[0] == 0 or next_state[1] == 0 or next_state[2] == 0 or next_state[3] == 0
+            if on_station and (not next_state[8] or not next_state[9]):
               reward -= 2
-            if on_station and (next_state[13] and not next_state[12]):
+            if on_station and (next_state[9] and not next_state[8]):
               reward -= 2
-            if on_station and (next_state[13] and next_state[12]):
+            if on_station and (next_state[9] and next_state[8]):
               reward += 1
                
             total_reward += reward
