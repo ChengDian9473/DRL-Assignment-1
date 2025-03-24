@@ -17,7 +17,7 @@ class SimpleTaxiEnv():
         """
         Custom Taxi environment supporting different grid sizes.
         """
-        self.grid_size = grid_size
+        self.grid_size = random.randint(5,grid_size)
         self.fuel_limit = fuel_limit
         self.current_fuel = fuel_limit
         self.passenger_picked_up = False
@@ -40,17 +40,31 @@ class SimpleTaxiEnv():
        
         self.obstacles = set()  # No obstacles in simple version
 
-        for _ in range(random.randint(grid_size-2,grid_size+2)):
-            flag = True
-            while flag:
-                flag = False
-                new_pos = (random.randint(0,self.grid_size-1),random.randint(0,self.grid_size-1))
-                for pos in self.obstacles:
-                    if abs(pos[0]-new_pos[0]) + abs(pos[1]-new_pos[1]) == 1:
-                        flag = True
-                        break
-            self.stations.append(new_pos)
+        t = self.grid_size * 2
+        
+        test = True
+        o_count = random.randint(2*grid_size,3*grid_size)
 
+        while test:
+            for i in range(o_count):
+                self.obstacles.add((random.randint(0,self.grid_size-1),random.randint(0,self.grid_size-1)))
+            counter = 0
+            maze = [[0] * self.grid_size for _ in range(self.grid_size)]
+            for x in range(self.grid_size):
+                for y in range(self.grid_size):
+                    if (x,y) in self.obstacles:
+                        continue
+                    if y > 0 and maze[x][y-1] != 0:
+                        maze[x][y] = maze[x][y-1]
+                    elif x > 0 and maze[x-1][y] != 0:
+                        maze[x][y] = maze[x-1][y]
+                    else:
+                        counter += 1
+                        maze[x][y] = counter
+            if counter == 1:
+                test = False
+            
+        
         self.destination = None
 
     def reset(self):
@@ -68,9 +82,13 @@ class SimpleTaxiEnv():
         
         self.passenger_loc = random.choice([pos for pos in self.stations])
         
-        
         possible_destinations = [s for s in self.stations if s != self.passenger_loc]
-        self.destination = random.choice(possible_destinations)
+        
+        if len(self.stations) == 0:
+            self.destination = (0,0)
+        else:
+            self.destination = random.choice(possible_destinations)
+         
         
         return self.get_state(), {}
 
@@ -165,10 +183,14 @@ class SimpleTaxiEnv():
         '''
         
         
-        grid[0][0]='R'
-        grid[0][4]='G'
-        grid[4][0]='Y'
-        grid[4][4]='B'
+        color = "RGYB"
+
+        for i in range(4):
+            grid[self.stations[i][0]][self.stations[i][1]] = color[i]
+
+        for pos in self.obstacles:
+            grid[pos[0]][pos[1]] = 'X'
+
         '''
         # Place destination
         dy, dx = destination_pos
