@@ -22,10 +22,35 @@ class SimpleTaxiEnv():
         self.current_fuel = fuel_limit
         self.passenger_picked_up = False
         
-        self.stations = [(0, 0), (0, self.grid_size - 1), (self.grid_size - 1, 0), (self.grid_size - 1, self.grid_size - 1)]
+        self.stations = []
+        
+        for _ in range(4):
+            flag = True
+            while flag:
+                flag = False
+                new_pos = (random.randint(0,self.grid_size-1),random.randint(0,self.grid_size-1))
+                for pos in self.stations:
+                    if abs(pos[0]-new_pos[0]) + abs(pos[1]-new_pos[1]) == 1:
+                        flag = True
+                        break
+            self.stations.append(new_pos)
+
+
         self.passenger_loc = None
        
         self.obstacles = set()  # No obstacles in simple version
+
+        for _ in range(random.randint(grid_size-2,grid_size+2)):
+            flag = True
+            while flag:
+                flag = False
+                new_pos = (random.randint(0,self.grid_size-1),random.randint(0,self.grid_size-1))
+                for pos in self.obstacles:
+                    if abs(pos[0]-new_pos[0]) + abs(pos[1]-new_pos[1]) == 1:
+                        flag = True
+                        break
+            self.stations.append(new_pos)
+
         self.destination = None
 
     def reset(self):
