@@ -12,22 +12,22 @@ def extract_state(state):
 
     relative0_row = station0_row - taxi_row
     relative0_col = station0_col - taxi_col
-    dis0 = abs(relative0_row,relative0_col)
+    dis0 = abs(relative0_row) + abs(relative0_col)
     if dis0 >= 3:
        dis0 = (dis0 + 1) // 2
     relative1_row = station1_row - taxi_row
     relative1_col = station1_col - taxi_col
-    dis1 = abs(relative1_row,relative1_col)
+    dis1 = abs(relative1_row) + abs(relative1_col)
     if dis1 >= 3:
        dis1 = (dis1 + 1) // 2
     relative2_row = station2_row - taxi_row
     relative2_col = station2_col - taxi_col
-    dis2 = abs(relative2_row,relative2_col)
+    dis2 = abs(relative2_row) + abs(relative2_col)
     if dis2 >= 3:
        dis2 = (dis2 + 1) // 2
     relative3_row = station3_row - taxi_row
     relative3_col = station3_col - taxi_col
-    dis3 = abs(relative3_row,relative3_col)
+    dis3 = abs(relative3_row) + abs(relative3_col)
     if dis3 >= 3:
        dis3 = (dis3 + 1) // 2
             
